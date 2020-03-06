@@ -1,26 +1,85 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
 import './App.css';
+import Result from './components/Result'
+import Keypad from './components/Keypad'
+import {Heading} from 'react-bulma-components/dist'
+import {Hero} from 'react-bulma-components/dist'
+import {Section} from 'react-bulma-components/dist'
+import {Container} from 'react-bulma-components/dist'
+import {Level} from 'react-bulma-components/dist'
+import {Columns} from 'react-bulma-components/dist'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component{
+  constructor(){
+    super()
+    this.state = {
+      result: ''
+    }
+  }
+
+
+  onClick = button => {
+
+    if(button === "="){
+        this.calculate()
+    }
+
+    else if(button === "C"){
+        this.reset()
+    }
+    else if(button === "CE"){
+        this.backspace()
+    }
+
+    else {
+        this.setState({
+            result: this.state.result + button
+        })
+    }
+  }
+
+  calculate = () => {
+    try {
+      this.setState({
+          // eslint-disable-next-line
+          result: (eval(this.state.result) || "" ) + ""
+      })
+    } catch (e) {
+        this.setState({
+            result: "error"
+        })
+
+    } 
+  }
+
+  reset = () => {
+    this.setState({
+        result: ""
+    })
+  }
+
+  backspace = () => {
+    this.setState({
+        result: this.state.result.slice(0, -1)
+    })
+  }
+
+  render(){
+    return(
+      <div>
+      <Section className="has-background-dark">
+            <Columns><Columns.Column size="one-third" offset="one-quarter">
+                <Heading renderAs="h1" className="has-text-white is-centered"> Reactивный калькулятор </Heading>
+              <Container>
+                <Result result={this.state.result}/>
+                <Keypad onClick={this.onClick}/>
+              </Container>
+            </Columns.Column></Columns>
+          </Section>
+      </div>
+    )
+  }
 }
 
 export default App;
